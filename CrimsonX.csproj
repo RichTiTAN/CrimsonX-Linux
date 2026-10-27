@@ -1,0 +1,56 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <RuntimeIdentifiers>linux-x64;linux-arm64;linux-arm</RuntimeIdentifiers>
+    <Nullable>enable</Nullable><AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+
+    <!-- Release builds ship as one executable, the same way the Windows package works.
+         Native libraries are extracted to a temp folder on first run. -->
+    <PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract Condition="'$(Configuration)' == 'Release'">true</IncludeNativeLibrariesForSelfExtract>
+    <DebugType Condition="'$(Configuration)' == 'Release'">none</DebugType>
+    <DebugSymbols Condition="'$(Configuration)' == 'Release'">false</DebugSymbols>
+    
+    <!-- Assembly & App Details -->
+    <Version>3.1.8</Version>
+    <AssemblyVersion>3.1.8.0</AssemblyVersion>
+    <FileVersion>3.1.8.0</FileVersion>
+    <Company>RichTiTAN</Company>
+    <Authors>RichTiTAN</Authors>
+    <Product>CrimsonX</Product>
+    <Description>an advanced proxy client for Windows</Description>
+    <Copyright>Copyright © 2026 RichTiTAN</Copyright>
+  <EnableNETAnalyzers>false</EnableNETAnalyzers><NoWarn>CS8600;CS8602;CS8603;CS8604;CS8618;CS8620;CS8625;CS0414;SYSLIB1045;SYSLIB1054;$(NoWarn);CA2249;CA1305;CA1310;CA1861;CA1845;CA2201;CA1001;CA1822;CA1852;CA1847</NoWarn></PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Desktop" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.4" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.4" />
+
+    <Using Remove="System.Windows.Forms" />
+    <Using Remove="System.Drawing" />
+    
+    <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1">
+      <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+      <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="CrimsonX.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The CrimsonX.Tests project lives in a subfolder of this project, so keep
+         its sources out of the application assembly. -->
+    <Compile Remove="CrimsonX.Tests\**" />
+    <EmbeddedResource Remove="CrimsonX.Tests\**" />
+    <None Remove="CrimsonX.Tests\**" />
+  </ItemGroup>
+</Project>
