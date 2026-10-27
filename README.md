@@ -4,14 +4,14 @@
   # CrimsonX
 
   **A GUI VPN client that fetches, tests and load-balances multiple xray configs suited for your network.**  
-  *Automated config scraping, intelligent load-balancing, and seamless tunneling for Windows.*
+  *Automated config scraping, intelligent load-balancing, and seamless tunneling for Linux.*
 </div>
 
 ---
 
 ##  Overview
 
-**CrimsonX** is an advanced proxy/vpn client for Windows built with C# and Avalonia UI. It takes advantage of the powerful **Xray-core** and **sing-box** engines under the hood, wrapping them in a beautiful, highly animated, and user-friendly interface.
+**CrimsonX** is an advanced proxy/vpn client for Linux built with C# and Avalonia UI. It takes advantage of the powerful **Xray-core** and **sing-box** engines under the hood, wrapping them in a beautiful, highly animated, and user-friendly interface.
 
 Unlike standard clients, CrimsonX features a **dynamic pipeline** that constantly pulls, tests, and caches the fastest configurations in the background. It automatically load-balances traffic across multiple nodes to ensure uninterrupted, high-speed connectivity.
 
@@ -40,29 +40,114 @@ Unlike standard clients, CrimsonX features a **dynamic pipeline** that constantl
 
 ##  Installation
 
-1. Go to the [Releases](https://github.com/RichTiTAN/CrimsonX/releases) page.
-2. Download the latest `CrimsonX.zip`.
-3. Extract the folder to your preferred location.
-4. Run `CrimsonX.exe`.
+CrimsonX runs natively on Linux — no Wine, no Proton. The builds are self-contained, so the .NET runtime travels with the app and the only extra requirements are a few system libraries.
 
-*Note: CrimsonX requires Windows 10 or newer.*
+1. Go to the [Releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases) page.
+2. Extract it — the release contains one folder per architecture. Use the one for your machine:
+
+   | Folder | Use it for |
+   | --- | --- |
+   | `x64` | 64-bit x86 — regular PCs, Steam Deck, most laptops |
+   | `arm64` | 64-bit ARM — Raspberry Pi 4/5, ARM boards and servers |
+   | `arm` | 32-bit ARMv7 — Raspberry Pi 2/3, older ARM boards |
+
+3. Open a terminal inside its `CrimsonX` folder — or let the one-line installer do steps 2 and 3 for you.
+
+There are three ways to install it.
+
+###  One line
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/RichTiTAN/CrimsonX-Linux/main/install/get-crimsonx.sh | sh
+```
+
+Detects your architecture, downloads the matching build, verifies its SHA-256, and runs the installer below. Knobs:
+
+| Variable | Effect |
+| --- | --- |
+| `PREFIX` | install somewhere other than `~/.local` |
+| `CRIMSONX_VERSION` | pin a release, e.g. `v1.2.3` |
+| `CRIMSONX_BASE_URL` | download from a mirror |
+| `KEEP=1` | leave the unpacked download behind |
+
+If you would rather read it before running it: `curl -fsSL …/get-crimsonx.sh -o get-crimsonx.sh`, then `less get-crimsonx.sh`, then `sh get-crimsonx.sh`.
+
+###  From the extracted folder
+
+```bash
+cd x64/CrimsonX       # arm64/CrimsonX or arm/CrimsonX on other machines
+sh ./install.sh
+```
+
+The script checks the required libraries, copies the app to `~/.local/opt/CrimsonX`, installs the bundled fonts, adds a menu entry and a `crimsonx` command, and grants the single permission VPN Mode needs. It asks for your password once, in the terminal — after that VPN Mode never prompts again, which is what makes it work in Game Mode and VR sessions that have no password dialog.
+
+Start it from your application menu, or type `crimsonx`.
+
+###  Run it portable
+
+```bash
+cd x64/CrimsonX       # arm64/CrimsonX or arm/CrimsonX on other machines
+chmod +x CrimsonX Data/xray/xray Data/sing_box/sing-box
+./CrimsonX
+```
+
+Create an empty `portable.txt` next to `CrimsonX` to keep every setting inside the folder instead of your home directory. Portable mode cannot grant itself the VPN permission, so run this once if you want VPN Mode without a password prompt:
+
+```bash
+sudo setcap cap_net_admin,cap_net_raw+ep Data/sing_box/sing-box
+```
+
+Without it, VPN Mode asks for a password through polkit; Proxy Mode works either way, because it needs no extra privileges.
+
+###  Checking an install
+
+```bash
+crimsonx --doctor
+```
+
+Prints what was detected: display backend, tray support, DNS tooling, both engines, the ICU library, and whether VPN Mode can start without a password. If the window comes up blank on a VM or an unusual GPU, add `--software-render`.
+
+*Requires a 64-bit or ARMv7 system with X11 or XWayland. Tested on Ubuntu, Debian and SteamOS. ARMv6 boards such as the Raspberry Pi 1 and Zero are not supported.*
+
+###  Updating
+
+CrimsonX updates itself from the [CrimsonX-Linux releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases). It reads `version.json`, downloads the archive for your architecture, unpacks it next to the running build, and a short shell script finishes the copy once the app has exited and starts it again. Your settings, configs and saved rules are left alone — they live outside the program folder.
+
+The archive carries a new `sing-box`, which is the one file that holds the VPN permission. If the capability could not be put back, VPN Mode asks for a password once; re-running `install.sh` restores it for good, and `crimsonx --doctor` tells you which state you are in.
 
 ###  Building from source
 Private worker URLs and a built-in encryption key live in a **gitignored** file (`Services/AppSecrets.cs`) so they never end up in the public repository. After cloning, create it from the template before building:
 
 ```
-copy Services\AppSecrets.cs.example Services\AppSecrets.cs
+cp Services/AppSecrets.cs.example Services/AppSecrets.cs
 ```
 
 Then open `Services/AppSecrets.cs` and fill in your own worker URLs plus a freshly generated 32-byte cache key and 16-byte IV.
 
-At runtime the stores in `Data\cache\*.bin` are encrypted with a 32-byte key that is generated on first use, wrapped with Windows DPAPI for the current Windows user, and kept in `Data\cache\data.key`. The key in `AppSecrets.cs` is only used to read stores written by older builds and as the fallback when DPAPI is unavailable, so an upgrade keeps your settings and saved credentials.
+Then build — one command does compile, tests and packaging:
+
+```bat
+build.cmd              # build, run the tests, package all three architectures (~6 min)
+build.cmd -SkipPack    # build + tests only, the loop while you are coding (~40 s)
+build.cmd -Quick       # compile only (~15 s)
+```
+
+The full run writes two things, both outside the repository:
+
+| Output | What it is |
+| --- | --- |
+| `CrimsonXAvalonia\Linux\x64\CrimsonX\` (and `arm64\`, `arm\`) | one self-contained folder per architecture: the app, both engines, xray's geo data, the fonts, `install.sh` and the GPL-3.0 licence |
+| `CrimsonXAvalonia\Linux\dist\CrimsonX-linux-*.tar.gz` + `.sha256` | the release assets the one-line installer and the in-app updater download |
+
+`build.cmd` is a thin wrapper around `build.ps1`, because a stock Windows PowerShell refuses to run a `.ps1` that was copied onto the machine. It also refuses to package when the three version numbers disagree — `CrimsonX.csproj`, `Services/UpdateService.cs` and `version.json` — since a release where they differ either offers an update nobody receives, or keeps offering one that never changes.
+
+At runtime the stores in `Data/cache/*.bin` are encrypted with a 32-byte key that is generated on first use and kept in `data.key` inside the app's data directory (`~/.local/share/crimsonx`, or the folder itself in portable mode), readable only by your user. The key in `AppSecrets.cs` is only used to read stores written by older builds and as the fallback when the key file cannot be written, so an upgrade keeps your settings and saved credentials.
 
 ##  Configuration & Usage
 
 ### 1. Connection Modes
 - **VPN Mode:** Uses sing-box to create a virtual network interface (TUN), forcing all system traffic through the proxy.
-- **Proxy Mode:** Sets the Windows System Proxy settings to route standard web traffic.
+- **Proxy Mode:** Sets the desktop proxy (GNOME via `gsettings`, KDE Plasma via `kwriteconfig`, otherwise an `environment.d` file) to route standard web traffic. Desktop proxies are advisory, so apps that ignore them bypass it — VPN Mode is the reliable option on Linux.
 - **Clear Proxy Mode:** Disables the system proxy settings, allowing direct connection to the internet. while exposing the proxy to apps that support manual proxy configuration.
 
 ### 2. Custom Configs
@@ -83,7 +168,7 @@ The app constantly checks if your current configs are working and if they are no
 The **Apps & Games** tab provides pre-configured routing profiles for popular games (Valorant, CS2, League of Legends, etc.) and applications (Discord, Telegram). You can seamlessly route TCP and UDP traffic independently, bind them to specific network adapters, or force regional matchmaking without affecting your global system VPN.
 
 ### TROUBLESHOOTING:
-- Check the [Documentation file](https://github.com/RichTiTAN/CrimsonX/blob/main/Documentation.md) for detailed instructions.
+- Check the [Documentation file](https://github.com/RichTiTAN/CrimsonX-Linux/blob/main/Documentation.md) for detailed instructions.
 
 ##  License
 
