@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=CrimsonX
+GenericName=Proxy Client
+Comment=Fetches, tests and load-balances xray configs
+Exec=crimsonx
+Icon=crimsonx
+Terminal=false
+Categories=Network;Utility;
+Keywords=vpn;proxy;xray;sing-box;vless;hysteria;
+StartupNotify=true
+StartupWMClass=CrimsonX
