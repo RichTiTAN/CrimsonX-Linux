@@ -30,11 +30,34 @@ say "  from: $APP_DIR"
 say "  into: $DEST"
 
 missing=""
-for lib in libX11.so.6 libICE.so.6 libSM.so.6 libfontconfig.so.1 libicuuc.so; do
-    if ! ldconfig -p 2>/dev/null | grep -q "$lib"; then
-        missing="$missing $lib"
-    fi
+ldconfig_bin=""
+for candidate in ldconfig /sbin/ldconfig /usr/sbin/ldconfig /usr/bin/ldconfig; do
+    if command -v "$candidate" >/dev/null 2>&1; then ldconfig_bin="$candidate"; break; fi
 done
+
+have_lib() {
+    lib=$1
+    if [ -n "$ldconfig_bin" ] && "$ldconfig_bin" -p 2>/dev/null | grep -q -- "$lib"; then
+        return 0
+    fi
+    for dir in /usr/lib /usr/lib64 /lib /lib64 /usr/local/lib \
+               /usr/lib/x86_64-linux-gnu /usr/lib/aarch64-linux-gnu /usr/lib/arm-linux-gnueabihf; do
+        [ -e "$dir/$lib" ] && return 0
+        for match in "$dir/$lib".*; do
+            [ -e "$match" ] && return 0
+        done
+    done
+    return 1
+}
+
+for lib in libX11.so.6 libICE.so.6 libSM.so.6 libfontconfig.so.1 libicuuc.so; do
+    have_lib "$lib" || missing="$missing $lib"
+done
+if [ -n "$missing" ] && [ -z "$ldconfig_bin" ]; then
+    say "  note: ldconfig was not found, so the library check could not be trusted."
+    say "        If the app fails to start, install:$missing"
+    missing=""
+fi
 if [ -n "$missing" ]; then
     say ""
     say "Missing runtime libraries:$missing"
