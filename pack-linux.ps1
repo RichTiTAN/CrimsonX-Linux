@@ -21,7 +21,8 @@
 # ---------------------------------------------------------------------------
 param(
     [string]$OutDir = 'E:\Desktop\CrimsonXAvalonia\Linux',
-    [string]$Work   = 'D:\cache\pack'
+    [string]$Work   = 'D:\cache\pack',
+    [string]$AwgDir = 'D:\cache\pack\awg'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -35,9 +36,9 @@ $XrayVersion = 'v26.10.21'
 $SbVersion   = 'v1.14.4'
 
 $Targets = @(
-    @{ Rid = 'linux-x64';   Tag = 'x64';   Xray = 'Xray-linux-64.zip';        Sb = 'sing-box-1.14.4-linux-amd64.tar.gz' },
-    @{ Rid = 'linux-arm64'; Tag = 'arm64'; Xray = 'Xray-linux-arm64-v8a.zip'; Sb = 'sing-box-1.14.4-linux-arm64.tar.gz' },
-    @{ Rid = 'linux-arm';   Tag = 'arm';   Xray = 'Xray-linux-arm32-v7a.zip'; Sb = 'sing-box-1.14.4-linux-armv7.tar.gz' }
+    @{ Rid = 'linux-x64';   Tag = 'x64';   Awg = 'amd64'; Xray = 'Xray-linux-64.zip';        Sb = 'sing-box-1.14.4-linux-amd64.tar.gz' },
+    @{ Rid = 'linux-arm64'; Tag = 'arm64'; Awg = 'arm64'; Xray = 'Xray-linux-arm64-v8a.zip'; Sb = 'sing-box-1.14.4-linux-arm64.tar.gz' },
+    @{ Rid = 'linux-arm';   Tag = 'arm';   Awg = 'arm';   Xray = 'Xray-linux-arm32-v7a.zip'; Sb = 'sing-box-1.14.4-linux-armv7.tar.gz' }
 )
 
 $GeoFiles = [ordered]@{
@@ -113,6 +114,20 @@ foreach ($t in $Targets) {
     $sbExe = Get-ChildItem -LiteralPath $sbTmp -Recurse -File -Filter 'sing-box' | Select-Object -First 1
     if (-not $sbExe) { throw "sing-box binary missing inside $($t.Sb)" }
     Copy-Item -LiteralPath $sbExe.FullName -Destination (Join-Path $sbDir 'sing-box') -Force
+
+    # ── amnezia-box (AmneziaWG engine) ──────────────────────────────────────
+    $awgSrc = Join-Path $AwgDir $t.Awg
+    $awgExe = Join-Path $awgSrc 'amnezia-box'
+    if (-not (Test-Path -LiteralPath $awgExe)) {
+        $awgSrc = Join-Path $AwgDir $t.Tag
+        $awgExe = Join-Path $awgSrc 'amnezia-box'
+    }
+    if (-not (Test-Path -LiteralPath $awgExe)) {
+        throw "amnezia-box for $($t.Rid) is missing: expected $awgExe (build it with GOOS=linux GOARCH=$($t.Awg) and the with_awg tag set)"
+    }
+    $awgOut = Join-Path $Package 'Data\awg'
+    New-Item -ItemType Directory -Force -Path $awgOut | Out-Null
+    Copy-Item -LiteralPath $awgExe -Destination (Join-Path $awgOut 'amnezia-box') -Force
 
     # ── launcher files (exec permissions are applied by install.sh) ─────────
     Copy-Item -LiteralPath (Join-Path $ProjectRoot 'install\install.sh')       -Destination $Package -Force

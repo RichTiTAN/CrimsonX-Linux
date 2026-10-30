@@ -244,8 +244,26 @@ namespace CrimsonX.Services
 
         private static bool LdConfigHas(string library)
         {
-            var (ok, output) = Run("ldconfig", "-p", 6000);
-            return ok && output.IndexOf(library, StringComparison.Ordinal) >= 0;
+            foreach (string tool in new[] { "ldconfig", "/sbin/ldconfig", "/usr/sbin/ldconfig", "/usr/bin/ldconfig" })
+            {
+                var (ok, output) = Run(tool, "-p", 6000);
+                if (!ok) continue;
+                if (output.IndexOf(library, StringComparison.Ordinal) >= 0) return true;
+                break;
+            }
+            foreach (string dir in new[]
+                     {
+                         "/usr/lib", "/usr/lib64", "/lib", "/lib64", "/usr/local/lib",
+                         "/usr/lib/x86_64-linux-gnu", "/usr/lib/aarch64-linux-gnu", "/usr/lib/arm-linux-gnueabihf"
+                     })
+            {
+                try
+                {
+                    if (Directory.Exists(dir) && Directory.GetFiles(dir, library + "*").Length > 0) return true;
+                }
+                catch { }
+            }
+            return false;
         }
 
         private static bool HasCapNetAdmin()

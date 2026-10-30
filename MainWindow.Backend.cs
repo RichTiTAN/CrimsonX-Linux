@@ -733,29 +733,6 @@ public partial class MainWindow
                 RequestConfigSave();
             }
         }
-        if (guard != OfflineGuard.Skip && !CrimsonX.Services.ConnectivityService.HasUsableConnection())
-        {
-            if (guard == OfflineGuard.AbortIfOffline)
-            {
-                CrimsonX.Services.SimpleLogger.Log("[Connect] No usable internet connection detected; auto-connect skipped.");
-                if (IsVisible && WindowState != WindowState.Minimized)
-                    ShowToast(CrimsonX.Localization.AppStrings.NoInternetTitle, ToastKind.Error);
-                return;
-            }
-            if (!IsVisible || WindowState == WindowState.Minimized)
-            {
-                Show();
-                WindowState = WindowState.Normal;
-                Activate();
-            }
-            var noNetDialog = new CrimsonX.Dialogs.ConfirmDialog(
-                CrimsonX.Localization.AppStrings.NoInternetTitle,
-                CrimsonX.Localization.AppStrings.NoInternetMessage,
-                CrimsonX.Localization.AppStrings.Yes,
-                CrimsonX.Localization.AppStrings.No);
-            string? noNetResult = await noNetDialog.ShowDialog<string>(this);
-            if (noNetResult != "Yes") return;
-        }
         StartEnginesAsync();
         }
         catch (Exception ex)

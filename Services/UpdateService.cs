@@ -30,7 +30,7 @@ namespace CrimsonX.Services
 {
     public static class UpdateService
     {
-        public const string AppVersion = "3.1.8";
+        public const string AppVersion = "3.2.0";
 
         private const string DefaultVersionUrl  = "https://raw.githubusercontent.com/RichTiTAN/CrimsonX-Linux/main/version.json";
         private const string DefaultReleaseBase = "https://github.com/RichTiTAN/CrimsonX-Linux/releases/latest/download";

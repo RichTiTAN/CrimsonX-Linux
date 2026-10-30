@@ -27,6 +27,8 @@ namespace CrimsonX.Services
 
         public const string SingboxExe = "sing-box";
 
+        public const string AwgExe = "amnezia-box";
+
         public static bool Portable { get; set; }
 
         public static string InstallDir { get; } = TrimSeparators(AppContext.BaseDirectory);
@@ -48,6 +50,8 @@ namespace CrimsonX.Services
         public static string XrayDir { get; } = Path.Combine(InstallDir, "Data", "xray");
 
         public static string SingboxDir { get; } = Path.Combine(InstallDir, "Data", "sing_box");
+
+        public static string AwgDir { get; } = Path.Combine(InstallDir, "Data", "awg");
 
         public static string Resolve(string? relative)
         {
@@ -82,7 +86,8 @@ namespace CrimsonX.Services
 
         private static bool IsEnginePath(string rel)
             => rel.StartsWith("Data/xray", StringComparison.OrdinalIgnoreCase)
-            || rel.StartsWith("Data/sing_box", StringComparison.OrdinalIgnoreCase);
+            || rel.StartsWith("Data/sing_box", StringComparison.OrdinalIgnoreCase)
+            || rel.StartsWith("Data/awg", StringComparison.OrdinalIgnoreCase);
 
         private static string NormalizeRelative(string? relative)
         {

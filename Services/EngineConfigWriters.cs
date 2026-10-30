@@ -697,7 +697,7 @@ namespace CrimsonX.Services
                 {
                     if (tunnelIpv6)
                     {
-                        var engineApps = new List<string> { AppPaths.XrayExe, AppPaths.SingboxExe, "conjure-client", "dnstt-client" };
+                        var engineApps = new List<string> { AppPaths.XrayExe, AppPaths.SingboxExe, AppPaths.AwgExe, "conjure-client", "dnstt-client" };
                         sbRules.Add(new { inbound = new[] { TunInboundTag }, process_name = engineApps.ToArray(), ip_cidr = new[] { "::/0" }, action = "route", outbound = "direct" });
                         sbRules.Add(new { ip_is_private = true, action = "route", outbound = "direct" });
                         sbRules.Add(new { ip_cidr = new[] { "::/0" }, action = "reject" });
