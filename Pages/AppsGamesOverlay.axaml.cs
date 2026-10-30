@@ -1909,16 +1909,6 @@ catch (Exception ex)
                     if (result != "Yes") return;
                     MainWindow.Instance.SwitchToVpnMode();
                 }
-                if (!CrimsonX.Services.ConnectivityService.HasUsableConnection())
-                {
-                    var noNetDlg = new CrimsonX.Dialogs.ConfirmDialog(
-                        CrimsonX.Localization.AppStrings.NoInternetTitle,
-                        CrimsonX.Localization.AppStrings.NoInternetMessage,
-                        CrimsonX.Localization.AppStrings.Yes,
-                        CrimsonX.Localization.AppStrings.No);
-                    string? noNetResult = await noNetDlg.ShowDialog<string>(MainWindow.Instance);
-                    if (noNetResult != "Yes") return;
-                }
             }
             MainWindow.Instance.ConnectAfterCheck();
             _hasPendingRuleChanges = false;
