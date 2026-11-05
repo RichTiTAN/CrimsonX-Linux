@@ -89,6 +89,7 @@ chmod +x "$DEST/CrimsonX"
 if [ -f "$DEST/Data/xray/xray" ]; then chmod +x "$DEST/Data/xray/xray"; fi
 if [ -f "$DEST/Data/sing_box/sing-box" ]; then chmod +x "$DEST/Data/sing_box/sing-box"; fi
 if [ -f "$DEST/Data/awg/amnezia-box" ]; then chmod +x "$DEST/Data/awg/amnezia-box"; fi
+if [ -f "$DEST/Data/ipsec/crimsonipsec" ]; then chmod +x "$DEST/Data/ipsec/crimsonipsec"; fi
 
 # Files unpacked from a Windows drive (or a zip made on Windows) arrive
 # world-writable; give them ordinary permissions.
@@ -97,6 +98,7 @@ chmod +x "$DEST/CrimsonX"
 if [ -f "$DEST/Data/xray/xray" ]; then chmod +x "$DEST/Data/xray/xray"; fi
 if [ -f "$DEST/Data/sing_box/sing-box" ]; then chmod +x "$DEST/Data/sing_box/sing-box"; fi
 if [ -f "$DEST/Data/awg/amnezia-box" ]; then chmod +x "$DEST/Data/awg/amnezia-box"; fi
+if [ -f "$DEST/Data/ipsec/crimsonipsec" ]; then chmod +x "$DEST/Data/ipsec/crimsonipsec"; fi
 
 # ── fonts ────────────────────────────────────────────────────────────────────
 # Selawik has a real SemiBold face and fontconfig only finds it when the fonts
