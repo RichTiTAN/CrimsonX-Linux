@@ -40,18 +40,18 @@ Unlike standard clients, CrimsonX features a **dynamic pipeline** that constantl
 
 ##  Installation
 
-CrimsonX runs natively on Linux — no Wine, no Proton. The builds are self-contained, so the .NET runtime travels with the app and the only extra requirements are a few system libraries.
+CrimsonX runs natively on Linux â€” no Wine, no Proton. The builds are self-contained, so the .NET runtime travels with the app and the only extra requirements are a few system libraries.
 
 1. Go to the [Releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases) page.
-2. Extract it — the release contains one folder per architecture. Use the one for your machine:
+2. Extract it â€” the release contains one folder per architecture. Use the one for your machine:
 
    | Folder | Use it for |
    | --- | --- |
-   | `x64` | 64-bit x86 — regular PCs, Steam Deck, most laptops |
-   | `arm64` | 64-bit ARM — Raspberry Pi 4/5, ARM boards and servers |
-   | `arm` | 32-bit ARMv7 — Raspberry Pi 2/3, older ARM boards |
+   | `x64` | 64-bit x86 â€” regular PCs, Steam Deck, most laptops |
+   | `arm64` | 64-bit ARM â€” Raspberry Pi 4/5, ARM boards and servers |
+   | `arm` | 32-bit ARMv7 â€” Raspberry Pi 2/3, older ARM boards |
 
-3. Open a terminal inside its `CrimsonX` folder — or let the one-line installer do steps 2 and 3 for you.
+3. Open a terminal inside its `CrimsonX` folder â€” or let the one-line installer do steps 2 and 3 for you.
 
 There are three ways to install it.
 
@@ -70,7 +70,7 @@ Detects your architecture, downloads the matching build, verifies its SHA-256, a
 | `CRIMSONX_BASE_URL` | download from a mirror |
 | `KEEP=1` | leave the unpacked download behind |
 
-If you would rather read it before running it: `curl -fsSL …/get-crimsonx.sh -o get-crimsonx.sh`, then `less get-crimsonx.sh`, then `sh get-crimsonx.sh`.
+If you would rather read it before running it: `curl -fsSL â€¦/get-crimsonx.sh -o get-crimsonx.sh`, then `less get-crimsonx.sh`, then `sh get-crimsonx.sh`.
 
 ###  From the extracted folder
 
@@ -79,7 +79,7 @@ cd x64/CrimsonX       # arm64/CrimsonX or arm/CrimsonX on other machines
 sh ./install.sh
 ```
 
-The script checks the required libraries, copies the app to `~/.local/opt/CrimsonX`, installs the bundled fonts, adds a menu entry and a `crimsonx` command, and grants the single permission VPN Mode needs. It asks for your password once, in the terminal — after that VPN Mode never prompts again, which is what makes it work in Game Mode and VR sessions that have no password dialog.
+The script checks the required libraries, copies the app to `~/.local/opt/CrimsonX`, installs the bundled fonts, adds a menu entry and a `crimsonx` command, and grants the single permission VPN Mode needs. It asks for your password once, in the terminal â€” after that VPN Mode never prompts again, which is what makes it work in Game Mode and VR sessions that have no password dialog.
 
 Start it from your application menu, or type `crimsonx`.
 
@@ -111,7 +111,7 @@ Prints what was detected: display backend, tray support, DNS tooling, both engin
 
 ###  Updating
 
-CrimsonX updates itself from the [CrimsonX-Linux releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases). It reads `version.json`, downloads the archive for your architecture, unpacks it next to the running build, and a short shell script finishes the copy once the app has exited and starts it again. Your settings, configs and saved rules are left alone — they live outside the program folder.
+CrimsonX updates itself from the [CrimsonX-Linux releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases). It reads `version.json`, downloads the archive for your architecture, unpacks it next to the running build, and a short shell script finishes the copy once the app has exited and starts it again. Your settings, configs and saved rules are left alone â€” they live outside the program folder.
 
 The archive carries a new `sing-box`, which is the one file that holds the VPN permission. If the capability could not be put back, VPN Mode asks for a password once; re-running `install.sh` restores it for good, and `crimsonx --doctor` tells you which state you are in.
 
@@ -124,7 +124,7 @@ cp Services/AppSecrets.cs.example Services/AppSecrets.cs
 
 Then open `Services/AppSecrets.cs` and fill in your own worker URLs plus a freshly generated 32-byte cache key and 16-byte IV.
 
-Then build — one command does compile, tests and packaging:
+Then build â€” one command does compile, tests and packaging:
 
 ```bat
 build.cmd              # build, run the tests, package all three architectures (~6 min)
@@ -139,7 +139,9 @@ The full run writes two things, both outside the repository:
 | `CrimsonXAvalonia\Linux\x64\CrimsonX\` (and `arm64\`, `arm\`) | one self-contained folder per architecture: the app, both engines, xray's geo data, the fonts, `install.sh` and the GPL-3.0 licence |
 | `CrimsonXAvalonia\Linux\dist\CrimsonX-linux-*.tar.gz` + `.sha256` | the release assets the one-line installer and the in-app updater download |
 
-`build.cmd` is a thin wrapper around `build.ps1`, because a stock Windows PowerShell refuses to run a `.ps1` that was copied onto the machine. It also refuses to package when the three version numbers disagree — `CrimsonX.csproj`, `Services/UpdateService.cs` and `version.json` — since a release where they differ either offers an update nobody receives, or keeps offering one that never changes.
+`build.cmd` is a thin wrapper around `build.ps1`, because a stock Windows PowerShell refuses to run a `.ps1` that was copied onto the machine. It refuses to package when `CrimsonX.csproj` and `Services/UpdateService.cs` disagree about the version, since a release where they differ either offers an update nobody receives, or keeps offering one that never changes.
+
+`version.json` is not part of the source tree. It lives in the repository on GitHub and is edited there â€” the app reads it from `main` when it checks for updates, so finishing a release means uploading the assets and pointing `version.json` at the new version.
 
 At runtime the stores in `Data/cache/*.bin` are encrypted with a 32-byte key that is generated on first use and kept in `data.key` inside the app's data directory (`~/.local/share/crimsonx`, or the folder itself in portable mode), readable only by your user. The key in `AppSecrets.cs` is only used to read stores written by older builds and as the fallback when the key file cannot be written, so an upgrade keeps your settings and saved credentials.
 
@@ -147,14 +149,20 @@ At runtime the stores in `Data/cache/*.bin` are encrypted with a 32-byte key tha
 
 ### 1. Connection Modes
 - **VPN Mode:** Uses sing-box to create a virtual network interface (TUN), forcing all system traffic through the proxy.
-- **Proxy Mode:** Sets the desktop proxy (GNOME via `gsettings`, KDE Plasma via `kwriteconfig`, otherwise an `environment.d` file) to route standard web traffic. Desktop proxies are advisory, so apps that ignore them bypass it — VPN Mode is the reliable option on Linux.
+- **Proxy Mode:** Sets the desktop proxy (GNOME via `gsettings`, KDE Plasma via `kwriteconfig`, otherwise an `environment.d` file) to route standard web traffic. Desktop proxies are advisory, so apps that ignore them bypass it â€” VPN Mode is the reliable option on Linux.
 - **Clear Proxy Mode:** Disables the system proxy settings, allowing direct connection to the internet. while exposing the proxy to apps that support manual proxy configuration.
 
 ### 2. Custom Configs
-If you don't want to rely on the automated scrapers, you can inject up to 2 of your own configs directly in the Settings tab: VLESS/VMESS/Shadowsocks/Socks share links, xray/sing-box outbound JSON, or full **OpenVPN** (`.ovpn`, with inline `<ca>`/`<tls-crypt>`/`<tls-auth>` blocks) and **WireGuard** configs (`.conf`, `wireguard://` share links, sing-box endpoint JSON or xray `wireguard` outbound JSON).
+If you don't want to rely on the automated scrapers, you can inject up to 2 of your own configs directly in the Settings tab: VLESS/VMESS/Shadowsocks/Socks share links, xray/sing-box outbound JSON, or full **OpenVPN** (`.ovpn`, with inline `<ca>`/`<tls-crypt>`/`<tls-auth>` blocks), **WireGuard** configs (`.conf`, `wireguard://` share links, sing-box endpoint JSON or xray `wireguard` outbound JSON) and **IKEv2** profiles (profile JSON, `ikev2://` share links, `.mobileconfig` files, or the **IKEV2** button under the custom configs).
 
 Just paste them in (**Ctrl+V**), press the **+** button to import a file, or pick one of your saved configs.
+
+Every entry in **SAVED CONFIGS** can be copied back out - the copy icon on its row, or a click on the row itself - and you get the config exactly as you imported it, `.ovpn` comments and `.conf` keys included. A remembered OpenVPN username and password are never part of that text: they are kept separately in the app's encrypted credential store and only attached to the endpoint when the tunnel starts.
 The same configs can also be used per app in the **Apps & Games** tab (custom proxy per rule). 
+
+The panel's third switch, **OBFUSCATION**, sends a burst of decoy datagrams before every OpenVPN / WireGuard handshake so the tunnel never opens with a recognisable first packet (UDP only, TCP configs are left alone; the server drops the decoys). Like its two neighbours it is staged and waits for **SUBMIT**.
+
+**AmneziaWG** configs (`.conf` or a sing-box `awg` endpoint JSON, with `Jc`/`Jmin`/`Jmax`, `S1`-`S4`, `H1`-`H4`, `I1`-`I5`, `Hpk`, `Cpa`, the AWG 3 timings and `RandomTrailers`/`DisableCookies`) run on a second engine, `Data\awg\amnezia-box.exe` - Amnezia's sing-box fork - while every other config keeps using the bundled sing-box. They work in the custom config boxes and in the Apps & Games rules, and they are refused as an exit node. A `DNS =` line in an AmneziaWG config is honoured inside that tunnel (names it resolves go to the config's resolver, through the tunnel); plain WireGuard and OpenVPN configs still leave DNS to CrimsonX.
 
 The **CUSTOM CONFIGS** section also carries a **PER-CONFIG ADAPTER** switch. With it on, each of the two boxes gets its own adapter picker and each config leaves through the adapter it was given.
 
@@ -178,7 +186,7 @@ See the [LICENSE](LICENSE) file for more details.
 
 ---
 <div align="center">
-  <i>Developed with ❤️ by RichTiTAN</i>
+  <i>Developed with â¤ï¸ by RichTiTAN</i>
 </div>
 
 # Credits and Donations  
