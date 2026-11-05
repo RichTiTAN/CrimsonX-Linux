@@ -22,7 +22,8 @@
 param(
     [string]$OutDir = 'E:\Desktop\CrimsonXAvalonia\Linux',
     [string]$Work   = 'D:\cache\pack',
-    [string]$AwgDir = 'D:\cache\pack\awg'
+    [string]$AwgDir = 'D:\cache\pack\awg',
+    [string]$IpsecDir = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -34,6 +35,8 @@ $ProjectRoot = 'E:\Desktop\CrimsonXLinux'
 $Project     = Join-Path $ProjectRoot 'CrimsonX.csproj'
 $XrayVersion = 'v26.10.21'
 $SbVersion   = 'v1.14.4'
+
+if (-not $IpsecDir) { $IpsecDir = Join-Path $ProjectRoot 'dist\ipsec' }
 
 $Targets = @(
     @{ Rid = 'linux-x64';   Tag = 'x64';   Awg = 'amd64'; Xray = 'Xray-linux-64.zip';        Sb = 'sing-box-1.14.4-linux-amd64.tar.gz' },
@@ -128,6 +131,20 @@ foreach ($t in $Targets) {
     $awgOut = Join-Path $Package 'Data\awg'
     New-Item -ItemType Directory -Force -Path $awgOut | Out-Null
     Copy-Item -LiteralPath $awgExe -Destination (Join-Path $awgOut 'amnezia-box') -Force
+
+    # ── crimsonipsec (IKEv2 engine) ─────────────────────────────────────────
+    $ipsecSrc = Join-Path $IpsecDir $t.Tag
+    $ipsecExe = Join-Path $ipsecSrc 'crimsonipsec'
+    if (-not (Test-Path -LiteralPath $ipsecExe)) {
+        throw "crimsonipsec for $($t.Rid) is missing: expected $ipsecExe (run tools\build-ipsec-linux.ps1 first)"
+    }
+    $ipsecOut = Join-Path $Package 'Data\ipsec'
+    New-Item -ItemType Directory -Force -Path $ipsecOut | Out-Null
+    Copy-Item -LiteralPath $ipsecExe -Destination (Join-Path $ipsecOut 'crimsonipsec') -Force
+    $ipsecNotices = Join-Path $ProjectRoot 'Data\ipsec\THIRD-PARTY-NOTICES.txt'
+    if (Test-Path -LiteralPath $ipsecNotices) {
+        Copy-Item -LiteralPath $ipsecNotices -Destination (Join-Path $ipsecOut 'THIRD-PARTY-NOTICES.txt') -Force
+    }
 
     # ── launcher files (exec permissions are applied by install.sh) ─────────
     Copy-Item -LiteralPath (Join-Path $ProjectRoot 'install\install.sh')       -Destination $Package -Force

@@ -1,0 +1,41 @@
+# What tools/sync-from-windows.ps1 can and cannot cover.
+#
+# Sections:
+#   [adapted]  files this port changed on purpose (platform seams, paths, translations).
+#              The sync tool never resolves a conflict in these by itself: it stops,
+#              names the file and leaves the patch for a human decision.
+#   [rewrite]  files that can be taken from the Windows side wholesale as long as the
+#              Windows paths in them are rewritten to the Linux ones below.
+#
+# Everything that is not listed here is applied as-is: new files (no conflict possible)
+# and files that are byte-identical to the Windows baseline.
+
+[rewrite]
+Documentation.md
+Documentation_fa.md
+README.md
+README_fa.md
+
+[adapted]
+Localization/AppStrings.cs
+MainWindow.Backend.cs
+MainWindow.ConnectFlow.cs
+MainWindow.Disposable.cs
+Pages/SettingsPage.axaml
+Pages/SettingsPage.axaml.cs
+Services/AppRulesSingboxBuilder.cs
+Services/ConfigValidator.cs
+Services/EngineConfigWriters.cs
+Services/IpsecEngine.cs
+Services/ProcessService.cs
+Services/TunnelEngine.cs
+pack-linux.ps1
+install/install.sh
+
+# Windows -> Linux path rewrites applied to [rewrite] files
+[paths]
+Data\ipsec\crimsonipsec.exe=Data/ipsec/crimsonipsec
+Data\awg\amnezia-box.exe=Data/awg/amnezia-box
+Data\sing_box\sing-box.exe=Data/sing_box/sing-box
+Data\xray\xray.exe=Data/xray/xray
+tools\build-ipsec.ps1=tools/build-ipsec-linux.ps1

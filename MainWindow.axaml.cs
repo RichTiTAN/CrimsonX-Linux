@@ -84,7 +84,7 @@ public partial class MainWindow : Window
         CrimsonX.Services.AppPaths.EnsureDir(_cfg.XrayDir);
         CrimsonX.Services.AppPaths.EnsureDir(_cfg.SbDir);
         ConfigService.Load(_cfg, _state, _cfg.CfgFile);
-        CrimsonX.Services.SimpleLogger.EnableLogging = true;
+        CrimsonX.Services.SimpleLogger.EnableLogging = _cfg.DebugMode;
         CrimsonX.Services.SimpleLogger.Log($"[Startup] CrimsonX v{Services.UpdateService.AppVersion} — Mode={_cfg.LastXrayMode}");
 
         CrimsonX.Services.ProcessService.SweepStrayEngines(

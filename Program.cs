@@ -63,7 +63,8 @@ class Program
         }
 
         AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-            CrimsonX.Services.SimpleLogger.Log(e.ExceptionObject?.ToString() ?? "Unknown");
+            CrimsonX.Services.SimpleLogger.LogFatal(e.ExceptionObject as Exception
+                ?? new Exception(e.ExceptionObject?.ToString() ?? "Unknown"));
         TaskScheduler.UnobservedTaskException += (s, e) =>
             {
                 CrimsonX.Services.BackgroundTask.Report("unobserved task", e.Exception);
