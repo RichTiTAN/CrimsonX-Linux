@@ -40,7 +40,7 @@ Unlike standard clients, CrimsonX features a **dynamic pipeline** that constantl
 
 ##  Installation
 
-CrimsonX runs natively on Linux â€” no Wine, no Proton. The builds are self-contained, so the .NET runtime travels with the app and the only extra requirements are a few system libraries.
+CrimsonX runs natively on Linux no Wine, no Proton. The builds are self-contained, so the .NET runtime travels with the app and the only extra requirements are a few system libraries.
 
 1. Go to the [Releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases) page.
 2. Extract it â€” the release contains one folder per architecture. Use the one for your machine:
