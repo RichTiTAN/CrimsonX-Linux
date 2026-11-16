@@ -47,9 +47,9 @@ CrimsonX runs natively on Linux â€” no Wine, no Proton. The builds are self
 
    | Folder | Use it for |
    | --- | --- |
-   | `x64` | 64-bit x86 â€” regular PCs, Steam Deck, most laptops |
-   | `arm64` | 64-bit ARM â€” Raspberry Pi 4/5, ARM boards and servers |
-   | `arm` | 32-bit ARMv7 â€” Raspberry Pi 2/3, older ARM boards |
+   | `x64` | 64-bit x86 regular PCs, Steam Deck, most laptops |
+   | `arm64` | 64-bit ARM Raspberry Pi 4/5, ARM boards and servers |
+   | `arm` | 32-bit ARMv7 Raspberry Pi 2/3, older ARM boards |
 
 3. Open a terminal inside its `CrimsonX` folder â€” or let the one-line installer do steps 2 and 3 for you.
 
@@ -186,7 +186,7 @@ See the [LICENSE](LICENSE) file for more details.
 
 ---
 <div align="center">
-  <i>Developed with â¤ï¸ by RichTiTAN</i>
+  <i>Developed with Love by RichTiTAN</i>
 </div>
 
 # Credits and Donations  
