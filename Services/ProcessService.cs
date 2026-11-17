@@ -201,6 +201,7 @@ namespace CrimsonX.Services
             || name.IndexOf("sing-box", StringComparison.OrdinalIgnoreCase) >= 0
             || name.IndexOf("sing_box", StringComparison.OrdinalIgnoreCase) >= 0
             || name.IndexOf("amnezia-box", StringComparison.OrdinalIgnoreCase) >= 0
+            || name.IndexOf("aether", StringComparison.OrdinalIgnoreCase) >= 0
             || name.IndexOf("crimsonipsec", StringComparison.OrdinalIgnoreCase) >= 0;
 
         public static void KillOrphanEngines()

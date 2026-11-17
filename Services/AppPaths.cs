@@ -29,6 +29,8 @@ namespace CrimsonX.Services
 
         public const string AwgExe = "amnezia-box";
 
+        public const string AetherExe = "aether";
+
         public static bool Portable { get; set; }
 
         public static string InstallDir { get; } = TrimSeparators(AppContext.BaseDirectory);
@@ -52,6 +54,11 @@ namespace CrimsonX.Services
         public static string SingboxDir { get; } = Path.Combine(InstallDir, "Data", "sing_box");
 
         public static string AwgDir { get; } = Path.Combine(InstallDir, "Data", "awg");
+
+        public static string AetherDir { get; } = Path.Combine(InstallDir, "Data", "aether");
+
+        public static string AetherStateDir
+            => Portable ? Path.Combine(InstallDir, "Data", "aether") : Path.Combine(StateDir, "aether");
 
         public static string Resolve(string? relative)
         {
@@ -87,7 +94,9 @@ namespace CrimsonX.Services
         private static bool IsEnginePath(string rel)
             => rel.StartsWith("Data/xray", StringComparison.OrdinalIgnoreCase)
             || rel.StartsWith("Data/sing_box", StringComparison.OrdinalIgnoreCase)
-            || rel.StartsWith("Data/awg", StringComparison.OrdinalIgnoreCase);
+            || rel.StartsWith("Data/awg", StringComparison.OrdinalIgnoreCase)
+            || rel.StartsWith("Data/aether", StringComparison.OrdinalIgnoreCase)
+            || rel.StartsWith("Data/ipsec", StringComparison.OrdinalIgnoreCase);
 
         private static string NormalizeRelative(string? relative)
         {
