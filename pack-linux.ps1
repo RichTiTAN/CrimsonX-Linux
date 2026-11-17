@@ -33,15 +33,16 @@ $env:TMP  = 'D:\cache\tmp'
 
 $ProjectRoot = 'E:\Desktop\CrimsonXLinux'
 $Project     = Join-Path $ProjectRoot 'CrimsonX.csproj'
-$XrayVersion = 'v26.10.21'
-$SbVersion   = 'v1.14.4'
+$XrayVersion   = 'v26.10.21'
+$SbVersion     = 'v1.14.4'
+$AetherVersion = 'v2.4.0'
 
 if (-not $IpsecDir) { $IpsecDir = Join-Path $ProjectRoot 'dist\ipsec' }
 
 $Targets = @(
-    @{ Rid = 'linux-x64';   Tag = 'x64';   Awg = 'amd64'; Xray = 'Xray-linux-64.zip';        Sb = 'sing-box-1.14.4-linux-amd64.tar.gz' },
-    @{ Rid = 'linux-arm64'; Tag = 'arm64'; Awg = 'arm64'; Xray = 'Xray-linux-arm64-v8a.zip'; Sb = 'sing-box-1.14.4-linux-arm64.tar.gz' },
-    @{ Rid = 'linux-arm';   Tag = 'arm';   Awg = 'arm';   Xray = 'Xray-linux-arm32-v7a.zip'; Sb = 'sing-box-1.14.4-linux-armv7.tar.gz' }
+    @{ Rid = 'linux-x64';   Tag = 'x64';   Awg = 'amd64'; Xray = 'Xray-linux-64.zip';        Sb = 'sing-box-1.14.4-linux-amd64.tar.gz'; Aether = 'aether-linux-x86_64.tar.gz'; AetherSha = '975e4efd46613ad51b7c62b2f5a73fc34fd9661cc15ed273ab816341bfcc2fd1' },
+    @{ Rid = 'linux-arm64'; Tag = 'arm64'; Awg = 'arm64'; Xray = 'Xray-linux-arm64-v8a.zip'; Sb = 'sing-box-1.14.4-linux-arm64.tar.gz'; Aether = 'aether-linux-arm64.tar.gz'; AetherSha = '23a556b8ec0a234d6ed6517e7c9b9477e31889117f7b1958a382e9fa88c4bab8' },
+    @{ Rid = 'linux-arm';   Tag = 'arm';   Awg = 'arm';   Xray = 'Xray-linux-arm32-v7a.zip'; Sb = 'sing-box-1.14.4-linux-armv7.tar.gz'; Aether = 'aether-linux-armv7.tar.gz'; AetherSha = '5ce0214e18e52879059f664c29a69b8af5cf95b25ecb8905bf0667be3eb3d202' }
 )
 
 $GeoFiles = [ordered]@{
@@ -117,6 +118,30 @@ foreach ($t in $Targets) {
     $sbExe = Get-ChildItem -LiteralPath $sbTmp -Recurse -File -Filter 'sing-box' | Select-Object -First 1
     if (-not $sbExe) { throw "sing-box binary missing inside $($t.Sb)" }
     Copy-Item -LiteralPath $sbExe.FullName -Destination (Join-Path $sbDir 'sing-box') -Force
+
+    # Aether (Cloudflare WARP engine)
+    $aetherTar = Join-Path $DownloadDir $t.Aether
+    Fetch ("https://github.com/CluvexStudio/Aether/releases/download/$AetherVersion/" + $t.Aether) $aetherTar
+    $aetherHash = (Get-FileHash -LiteralPath $aetherTar -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($aetherHash -ne $t.AetherSha.ToLowerInvariant()) {
+        Remove-Item -LiteralPath $aetherTar -Force -ErrorAction SilentlyContinue
+        throw "Aether checksum mismatch for $($t.Aether): got $aetherHash"
+    }
+
+    $aetherDir = Join-Path $Package 'Data\aether'
+    New-Item -ItemType Directory -Force -Path $aetherDir | Out-Null
+    $aetherTmp = Join-Path $Work ($t.Tag + '-aethertmp')
+    if (Test-Path -LiteralPath $aetherTmp) { Remove-Item -LiteralPath $aetherTmp -Recurse -Force }
+    New-Item -ItemType Directory -Force -Path $aetherTmp | Out-Null
+    & tar.exe -xzf $aetherTar -C $aetherTmp
+    if ($LASTEXITCODE -ne 0) { throw "could not extract $($t.Aether)" }
+    $aetherExe = Get-ChildItem -LiteralPath $aetherTmp -Recurse -File -Filter 'aether' | Select-Object -First 1
+    if (-not $aetherExe) { throw "Aether binary missing inside $($t.Aether)" }
+    Copy-Item -LiteralPath $aetherExe.FullName -Destination (Join-Path $aetherDir 'aether') -Force
+    $aetherLicenses = Get-ChildItem -LiteralPath $aetherTmp -Recurse -Directory -Filter 'LICENSES' | Select-Object -First 1
+    if ($aetherLicenses) {
+        Copy-Item -LiteralPath $aetherLicenses.FullName -Destination (Join-Path $aetherDir 'LICENSES') -Recurse -Force
+    }
 
     # ── amnezia-box (AmneziaWG engine) ──────────────────────────────────────
     $awgSrc = Join-Path $AwgDir $t.Awg

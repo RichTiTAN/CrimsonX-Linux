@@ -59,6 +59,19 @@ if ($packing) {
     if ($LASTEXITCODE -ne 0) { throw 'packaging failed' }
     Write-Host ("   ok  ({0:N0}s)" -f $sw.Elapsed.TotalSeconds)
 
+    foreach ($arch in @('x64', 'arm64', 'arm')) {
+        $package = Join-Path (Join-Path $OutDir $arch) 'CrimsonX'
+        $aether = Join-Path $package 'Data\aether\aether'
+        $licenses = Join-Path $package 'Data\aether\LICENSES'
+        if (-not (Test-Path -LiteralPath $aether) -or (Get-Item -LiteralPath $aether).Length -lt 1MB) {
+            throw "Aether is missing from the $arch package: $aether"
+        }
+        if (-not (Test-Path -LiteralPath $licenses)) {
+            throw "Aether licences are missing from the $arch package: $licenses"
+        }
+    }
+    Write-Host '   Aether is packaged for x64, arm64 and arm'
+
     Write-Host ''
     Write-Host 'Upload these six files to the release:'
     Get-ChildItem -LiteralPath (Join-Path $OutDir 'dist') -File | Sort-Object Name | ForEach-Object {
