@@ -35,23 +35,23 @@ Unlike standard clients, CrimsonX features a **dynamic pipeline** that constantl
 
 ##  Screenshots
 
-<img width="696" height="554" alt="Screenshot 2026-10-04 155541" src="https://github.com/user-attachments/assets/7b093fdb-5d37-4ee0-a75c-efadf7aa86b9" />
+<img width="694" height="552" alt="image" src="https://github.com/user-attachments/assets/44f37838-2a44-4aec-a0ea-4f48e6c47334" />
 
 
 ##  Installation
 
-CrimsonX runs natively on Linux no Wine, no Proton. The builds are self-contained, so the .NET runtime travels with the app and the only extra requirements are a few system libraries.
+CrimsonX runs natively on Linux — no Wine, no Proton. The builds are self-contained, so the .NET runtime travels with the app and the only extra requirements are a few system libraries.
 
 1. Go to the [Releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases) page.
-2. Extract it â€” the release contains one folder per architecture. Use the one for your machine:
+2. Extract it — the release contains one folder per architecture. Use the one for your machine:
 
    | Folder | Use it for |
    | --- | --- |
-   | `x64` | 64-bit x86 regular PCs, Steam Deck, most laptops |
-   | `arm64` | 64-bit ARM Raspberry Pi 4/5, ARM boards and servers |
-   | `arm` | 32-bit ARMv7 Raspberry Pi 2/3, older ARM boards |
+   | `x64` | 64-bit x86 — regular PCs, Steam Deck, most laptops |
+   | `arm64` | 64-bit ARM — Raspberry Pi 4/5, ARM boards and servers |
+   | `arm` | 32-bit ARMv7 — Raspberry Pi 2/3, older ARM boards |
 
-3. Open a terminal inside its `CrimsonX` folder â€” or let the one-line installer do steps 2 and 3 for you.
+3. Open a terminal inside its `CrimsonX` folder — or let the one-line installer do steps 2 and 3 for you.
 
 There are three ways to install it.
 
@@ -70,7 +70,7 @@ Detects your architecture, downloads the matching build, verifies its SHA-256, a
 | `CRIMSONX_BASE_URL` | download from a mirror |
 | `KEEP=1` | leave the unpacked download behind |
 
-If you would rather read it before running it: `curl -fsSL â€¦/get-crimsonx.sh -o get-crimsonx.sh`, then `less get-crimsonx.sh`, then `sh get-crimsonx.sh`.
+If you would rather read it before running it: `curl -fsSL …/get-crimsonx.sh -o get-crimsonx.sh`, then `less get-crimsonx.sh`, then `sh get-crimsonx.sh`.
 
 ###  From the extracted folder
 
@@ -79,7 +79,7 @@ cd x64/CrimsonX       # arm64/CrimsonX or arm/CrimsonX on other machines
 sh ./install.sh
 ```
 
-The script checks the required libraries, copies the app to `~/.local/opt/CrimsonX`, installs the bundled fonts, adds a menu entry and a `crimsonx` command, and grants the single permission VPN Mode needs. It asks for your password once, in the terminal â€” after that VPN Mode never prompts again, which is what makes it work in Game Mode and VR sessions that have no password dialog.
+The script checks the required libraries, copies the app to `~/.local/opt/CrimsonX`, installs the bundled fonts, adds a menu entry and a `crimsonx` command, and grants the single permission VPN Mode needs. It asks for your password once, in the terminal — after that VPN Mode never prompts again, which is what makes it work in Game Mode and VR sessions that have no password dialog.
 
 Start it from your application menu, or type `crimsonx`.
 
@@ -111,7 +111,7 @@ Prints what was detected: display backend, tray support, DNS tooling, both engin
 
 ###  Updating
 
-CrimsonX updates itself from the [CrimsonX-Linux releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases). It reads `version.json`, downloads the archive for your architecture, unpacks it next to the running build, and a short shell script finishes the copy once the app has exited and starts it again. Your settings, configs and saved rules are left alone â€” they live outside the program folder.
+CrimsonX updates itself from the [CrimsonX-Linux releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases). It reads `version.json`, downloads the archive for your architecture, unpacks it next to the running build, and a short shell script finishes the copy once the app has exited and starts it again. Your settings, configs and saved rules are left alone — they live outside the program folder.
 
 The archive carries a new `sing-box`, which is the one file that holds the VPN permission. If the capability could not be put back, VPN Mode asks for a password once; re-running `install.sh` restores it for good, and `crimsonx --doctor` tells you which state you are in.
 
@@ -124,7 +124,7 @@ cp Services/AppSecrets.cs.example Services/AppSecrets.cs
 
 Then open `Services/AppSecrets.cs` and fill in your own worker URLs plus a freshly generated 32-byte cache key and 16-byte IV.
 
-Then build â€” one command does compile, tests and packaging:
+Then build — one command does compile, tests and packaging:
 
 ```bat
 build.cmd              # build, run the tests, package all three architectures (~6 min)
@@ -136,12 +136,14 @@ The full run writes two things, both outside the repository:
 
 | Output | What it is |
 | --- | --- |
-| `CrimsonXAvalonia\Linux\x64\CrimsonX\` (and `arm64\`, `arm\`) | one self-contained folder per architecture: the app, both engines, xray's geo data, the fonts, `install.sh` and the GPL-3.0 licence |
+| `CrimsonXAvalonia\Linux\x64\CrimsonX\` (and `arm64\`, `arm\`) | one self-contained folder per architecture: the app, xray, sing-box, Aether, the IKEv2 engine, xray's geo data, the fonts, `install.sh`, the EULA and the third-party licences |
 | `CrimsonXAvalonia\Linux\dist\CrimsonX-linux-*.tar.gz` + `.sha256` | the release assets the one-line installer and the in-app updater download |
 
-`build.cmd` is a thin wrapper around `build.ps1`, because a stock Windows PowerShell refuses to run a `.ps1` that was copied onto the machine. It refuses to package when `CrimsonX.csproj` and `Services/UpdateService.cs` disagree about the version, since a release where they differ either offers an update nobody receives, or keeps offering one that never changes.
+`build.cmd` is a thin wrapper around `build.ps1`, because a stock Windows PowerShell refuses to run a `.ps1` that was copied onto the machine. It refuses to package when `CrimsonX.csproj` and `Services/UpdateService.cs` disagree about the version, since a release where they differ either offers an update nobody receives, or keeps offering one that never changes. The full build also refuses to finish unless every architecture contains `Data/aether/aether` and the `Licenses/Aether` folder.
 
-`version.json` is not part of the source tree. It lives in the repository on GitHub and is edited there â€” the app reads it from `main` when it checks for updates, so finishing a release means uploading the assets and pointing `version.json` at the new version.
+`pack-linux.ps1` downloads the pinned Aether v2.4.0 glibc archive for each architecture, verifies its SHA-256 checksum, and copies the binary and licences into the package; `install.sh` marks the binary executable.
+
+`version.json` is not part of the source tree. It lives in the repository on GitHub and is edited there — the app reads it from `main` when it checks for updates, so finishing a release means uploading the assets and pointing `version.json` at the new version.
 
 At runtime the stores in `Data/cache/*.bin` are encrypted with a 32-byte key that is generated on first use and kept in `data.key` inside the app's data directory (`~/.local/share/crimsonx`, or the folder itself in portable mode), readable only by your user. The key in `AppSecrets.cs` is only used to read stores written by older builds and as the fallback when the key file cannot be written, so an upgrade keeps your settings and saved credentials.
 
@@ -149,7 +151,7 @@ At runtime the stores in `Data/cache/*.bin` are encrypted with a 32-byte key tha
 
 ### 1. Connection Modes
 - **VPN Mode:** Uses sing-box to create a virtual network interface (TUN), forcing all system traffic through the proxy.
-- **Proxy Mode:** Sets the desktop proxy (GNOME via `gsettings`, KDE Plasma via `kwriteconfig`, otherwise an `environment.d` file) to route standard web traffic. Desktop proxies are advisory, so apps that ignore them bypass it â€” VPN Mode is the reliable option on Linux.
+- **Proxy Mode:** Sets the desktop proxy (GNOME via `gsettings`, KDE Plasma via `kwriteconfig`, otherwise an `environment.d` file) to route standard web traffic. Desktop proxies are advisory, so apps that ignore them bypass it — VPN Mode is the reliable option on Linux.
 - **Clear Proxy Mode:** Disables the system proxy settings, allowing direct connection to the internet. while exposing the proxy to apps that support manual proxy configuration.
 
 ### 2. Custom Configs
@@ -175,18 +177,24 @@ The app constantly checks if your current configs are working and if they are no
 ### 5. Apps & Games Profile Routing
 The **Apps & Games** tab provides pre-configured routing profiles for popular games (Valorant, CS2, League of Legends, etc.) and applications (Discord, Telegram). You can seamlessly route TCP and UDP traffic independently, bind them to specific network adapters, or force regional matchmaking without affecting your global system VPN.
 
+### 6. WARP
+If the need arises you can enable WARP from the main page of the app and route all the app's configs through Cloudflare WARP for better connectivity.
+
 ### TROUBLESHOOTING:
 - Check the [Documentation file](https://github.com/RichTiTAN/CrimsonX-Linux/blob/main/Documentation.md) for detailed instructions.
+- Share-link and JSON formats for MASQUE, WireGuard, IKEv2 and OpenVPN are in the [Transports file](https://github.com/RichTiTAN/CrimsonX-Linux/blob/main/Transports.md).
 
 ##  License
 
-This program is free software: you can redistribute it and/or modify it under the terms of the **GNU General Public License (v3)** as published by the Free Software Foundation.
+CrimsonX 3.3.4 and later are proprietary software, licensed under the [CrimsonX End User License Agreement](EULA.txt). By installing or using those versions you agree to that EULA.
 
-See the [LICENSE](LICENSE) file for more details.
+Versions up to and including 3.3.3 were released under the **GNU General Public License (v3)**. Their rights are not revoked, and their corresponding source remains available in the matching release tags and releases.
+
+Third-party components remain under their own licenses: see [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) and the `Licenses` folder.
 
 ---
 <div align="center">
-  <i>Developed with Love by RichTiTAN</i>
+  <i>Developed with ❤️ by RichTiTAN</i>
 </div>
 
 # Credits and Donations  
@@ -195,7 +203,10 @@ Creator: [@itsTiTANVPN](https://t.me/itsTitanVPN)
 __Credits:__  
 xray: https://github.com/xtls/xray-core  
 Sing_Box: https://github.com/SagerNet/sing-box  
-Avalonia: https://github.com/avaloniaui
+Avalonia: https://github.com/avaloniaui  
+Aether: https://github.com/CluvexStudio/Aether  
+go-ipsec: https://github.com/n0madic/go-ipsec  
+amw: https://github.com/amnezia-vpn/amnezia-box
 
 __Donations:__ 
 - If you want to support the project or me you can do so by sending your desired amount to one of these wallet addresses:

@@ -35,7 +35,7 @@
 
 ## 📸 اسکرین‌شات‌ها
 
-<img width="696" height="554" alt="Screenshot 2026-10-04 155541" src="https://github.com/user-attachments/assets/7b093fdb-5d37-4ee0-a75c-efadf7aa86b9" />
+<img width="694" height="552" alt="image" src="https://github.com/user-attachments/assets/44f37838-2a44-4aec-a0ea-4f48e6c47334" />
 
 ## 📥 نصب
 
@@ -136,7 +136,7 @@ build.cmd -Quick       # فقط کامپایل (حدود ۱۵ ثانیه)
 
 | خروجی | چیست |
 | --- | --- |
-| `CrimsonXAvalonia\Linux\x64\CrimsonX\` و `arm64\` و `arm\` | برای هر معماری یک پوشهٔ خودکفا: برنامه، هر دو انجین، داده‌های geo، فونت‌ها، `install.sh` و متن مجوز GPL-3.0 |
+| `CrimsonXAvalonia\Linux\x64\CrimsonX\` و `arm64\` و `arm\` | برای هر معماری یک پوشهٔ خودکفا: برنامه، هر دو انجین، داده‌های geo، فونت‌ها، `install.sh`، توافق نامه EULA و مجوزهای شخص ثالث |
 | `CrimsonXAvalonia\Linux\dist\CrimsonX-linux-*.tar.gz` و `.sha256` | همان فایل‌هایی که نصب‌کنندهٔ یک‌خطی و به‌روزرسانی داخل برنامه دانلود می‌کنند |
 
 `build.cmd` یک پوستهٔ نازک دور `build.ps1` است، چون PowerShell ویندوز به‌طور پیش‌فرض اجرای فایل `.ps1` را که روی دستگاه کپی شده باشد نمی‌پذیرد. اگر `CrimsonX.csproj` و `Services/UpdateService.cs` دربارهٔ شمارهٔ نسخه با هم نخوانند، از بسته‌بندی خودداری می‌کند؛ چون در آن حالت یا به‌روزرسانی‌ای پیشنهاد می‌شود که هیچ‌کس دریافتش نمی‌کند، یا نسخه‌ای بارها پیشنهاد می‌شود که شمارهٔ قدیمی را گزارش می‌کند.
@@ -166,13 +166,16 @@ build.cmd -Quick       # فقط کامپایل (حدود ۱۵ ثانیه)
 تب **برنامه‌ها و بازی‌ها** پروفایل‌های مسیریابی از پیش پیکربندی شده‌ای را برای بازی‌های محبوب (مانند Valorant، CS2، League of Legends) و برنامه‌ها (مانند Discord، Telegram) ارائه می‌دهد. شما می‌توانید ترافیک TCP و UDP را به طور مستقل مسیریابی کنید، آن‌ها را به آداپتورهای شبکه خاص متصل کنید، یا بدون تأثیر بر VPN کلی سیستم خود، ریجن مچ‌میکینگ را تنظیم کنید.
 
 ### عیب‌یابی:
-- برای دستورالعمل‌های دقیق، فایل [گزارشات](./DOCUMENTATION_fa.md) را بررسی کنید.
+- برای دستورالعمل‌های دقیق، فایل [گزارشات](./Documentation_fa.md) را بررسی کنید.
+- فرمت لینک اشتراک و جیسون برای MASQUE، WireGuard، IKEv2 و OpenVPN در فایل [Transports](./Transports.md) است.
 
 ## 📜 لایسنس
 
-این برنامه نرم‌افزار آزاد است: شما می‌توانید آن را تحت شرایط **مجوز عمومی همگانی گنو (نسخه 3)** همانطور که توسط بنیاد نرم‌افزار آزاد منتشر شده است، مجدداً توزیع کرده و/یا تغییر دهید.
+CrimsonX از نسخه 3.3.4 به بعد نرم افزاری اختصاصی است و تحت [توافق نامه مجوز کاربر نهایی](EULA.txt) منتشر می شود. با نصب یا استفاده از این نسخه ها با آن توافق نامه موافقت می کنید.
 
-برای جزئیات بیشتر فایل [LICENSE](LICENSE) را ببینید.
+نسخه های تا 3.3.3 تحت **مجوز عمومی همگانی گنو (نسخه 3)** منتشر شده بودند. حقوق آن نسخه ها لغو نمی شود و سورس کد متناظر آن ها در تگ ها و ریلیزهای همان نسخه ها در دسترس است.
+
+اجزای شخص ثالث تحت مجوزهای خودشان هستند: فایل [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) و پوشه `Licenses` را ببینید.
 
 ---
 <div align="center">
@@ -185,7 +188,10 @@ Creator: [@itsTiTANVPN](https://t.me/itsTitanVPN)
 __Credits:__  
 xray: https://github.com/xtls/xray-core  
 Sing_Box: https://github.com/SagerNet/sing-box  
-Avalonia: https://github.com/avaloniaui
+Avalonia: https://github.com/avaloniaui  
+Aether: https://github.com/CluvexStudio/Aether  
+go-ipsec: https://github.com/n0madic/go-ipsec  
+amw: https://github.com/amnezia-vpn/amnezia-box
 
 __Donations:__ 
 - If you want to support the project or me you can do so by sending your desired amount to one of these wallet addresses:
