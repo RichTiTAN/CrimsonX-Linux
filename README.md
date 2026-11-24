@@ -115,37 +115,8 @@ CrimsonX updates itself from the [CrimsonX-Linux releases](https://github.com/Ri
 
 The archive carries a new `sing-box`, which is the one file that holds the VPN permission. If the capability could not be put back, VPN Mode asks for a password once; re-running `install.sh` restores it for good, and `crimsonx --doctor` tells you which state you are in.
 
-###  Building from source
-Private worker URLs and a built-in encryption key live in a **gitignored** file (`Services/AppSecrets.cs`) so they never end up in the public repository. After cloning, create it from the template before building:
-
-```
-cp Services/AppSecrets.cs.example Services/AppSecrets.cs
-```
-
-Then open `Services/AppSecrets.cs` and fill in your own worker URLs plus a freshly generated 32-byte cache key and 16-byte IV.
-
-Then build — one command does compile, tests and packaging:
-
-```bat
-build.cmd              # build, run the tests, package all three architectures (~6 min)
-build.cmd -SkipPack    # build + tests only, the loop while you are coding (~40 s)
-build.cmd -Quick       # compile only (~15 s)
-```
-
-The full run writes two things, both outside the repository:
-
-| Output | What it is |
-| --- | --- |
-| `CrimsonXAvalonia\Linux\x64\CrimsonX\` (and `arm64\`, `arm\`) | one self-contained folder per architecture: the app, xray, sing-box, Aether, the IKEv2 engine, xray's geo data, the fonts, `install.sh`, the EULA and the third-party licences |
-| `CrimsonXAvalonia\Linux\dist\CrimsonX-linux-*.tar.gz` + `.sha256` | the release assets the one-line installer and the in-app updater download |
-
-`build.cmd` is a thin wrapper around `build.ps1`, because a stock Windows PowerShell refuses to run a `.ps1` that was copied onto the machine. It refuses to package when `CrimsonX.csproj` and `Services/UpdateService.cs` disagree about the version, since a release where they differ either offers an update nobody receives, or keeps offering one that never changes. The full build also refuses to finish unless every architecture contains `Data/aether/aether` and the `Licenses/Aether` folder.
-
-`pack-linux.ps1` downloads the pinned Aether v2.4.0 glibc archive for each architecture, verifies its SHA-256 checksum, and copies the binary and licences into the package; `install.sh` marks the binary executable.
-
-`version.json` is not part of the source tree. It lives in the repository on GitHub and is edited there — the app reads it from `main` when it checks for updates, so finishing a release means uploading the assets and pointing `version.json` at the new version.
-
-At runtime the stores in `Data/cache/*.bin` are encrypted with a 32-byte key that is generated on first use and kept in `data.key` inside the app's data directory (`~/.local/share/crimsonx`, or the folder itself in portable mode), readable only by your user. The key in `AppSecrets.cs` is only used to read stores written by older builds and as the fallback when the key file cannot be written, so an upgrade keeps your settings and saved credentials.
+###  CrimsonX is now a closed source project  
+- After version 3.3.3 by my decision the app was made closed source. older versions are still available for download alongside their source.
 
 ##  Configuration & Usage
 
