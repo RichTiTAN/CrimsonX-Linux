@@ -170,7 +170,6 @@ foreach ($t in $Targets) {
     # ── launcher files (exec permissions are applied by install.sh) ─────────
     Copy-Item -LiteralPath (Join-Path $ProjectRoot 'install\install.sh')       -Destination $Package -Force
     Copy-Item -LiteralPath (Join-Path $ProjectRoot 'install\crimsonx.desktop') -Destination $Package -Force
-    Copy-Item -LiteralPath (Join-Path $ProjectRoot 'LICENSE.txt')              -Destination $Package -Force
     Copy-Item -LiteralPath (Join-Path $ProjectRoot 'LICENSE')                  -Destination $Package -Force
     Copy-Item -LiteralPath (Join-Path $ProjectRoot 'EULA.txt')                 -Destination $Package -Force
     Copy-Item -LiteralPath (Join-Path $ProjectRoot 'THIRD-PARTY-NOTICES.txt')  -Destination $Package -Force
