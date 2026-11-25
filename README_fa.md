@@ -55,6 +55,8 @@
 
 ## 📥 نصب
 
+> **دنبال نسخهٔ ویندوز هستید؟** CrimsonX روی ویندوز هم اجرا می‌شود — [مخزن CrimsonX](https://github.com/RichTiTAN/CrimsonX).
+
 CrimsonX به‌صورت بومی روی لینوکس اجرا می‌شود؛ نه Wine می‌خواهد و نه Proton. بسته‌ها self-contained هستند و رانتایم .NET همراهشان است، پس تنها چیز اضافه‌ای که لازم است چند کتابخانهٔ سیستمی است.
 
 ۱. به صفحه [Releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases) بروید.

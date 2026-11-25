@@ -56,6 +56,8 @@ If what you do needs to be trustworthy, use infrastructure you control:
 
 ##  Installation
 
+> **On Windows?** CrimsonX also runs natively on Windows — see the [CrimsonX repository](https://github.com/RichTiTAN/CrimsonX).
+
 CrimsonX runs natively on Linux — no Wine, no Proton. The builds are self-contained, so the .NET runtime travels with the app and the only extra requirements are a few system libraries.
 
 1. Go to the [Releases](https://github.com/RichTiTAN/CrimsonX-Linux/releases) page.
