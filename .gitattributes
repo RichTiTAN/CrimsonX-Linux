@@ -1,0 +1,18 @@
+# Line endings
+#
+# This repository is developed on Windows but the product is a Linux app, and two
+# files decide whether it installs at all: install.sh and crimsonx.desktop. If git
+# checks them out as CRLF, Linux fails with "bad interpreter" / "$'\r': command not
+# found". Pin them, regardless of anyone's core.autocrlf setting.
+* text=auto
+*.sh      text eol=lf
+*.desktop text eol=lf
+
+# Binary assets - never convert, never diff
+*.ttf binary
+*.otf binary
+*.ico binary
+*.png binary
+*.dat binary
+*.tar.gz binary
+*.zip binary
