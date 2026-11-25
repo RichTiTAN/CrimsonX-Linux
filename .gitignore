@@ -1,0 +1,36 @@
+# Build output
+bin/
+obj/
+
+# Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+.aider*
+.tempstats/
+
+# Local secrets (private worker URLs + cache key) - never commit
+Services/AppSecrets.cs
+
+# Published output (release builds go outside the repo, but just in case)
+publish/
+dist/
+*.zip
+*.tar.gz
+
+# Engine binaries are built by tools/build-*.ps1 and shipped in the release package
+Data/ipsec/*.exe
+Data/ipsec/crimsonipsec
+Data/xray/xray
+Data/sing_box/sing-box
+Data/sing_box/*.dll
+Data/awg/amnezia-box
+Data/aether/aether
